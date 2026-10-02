@@ -30,12 +30,24 @@ Sonra tarayıcıda http://localhost:8123 adresini aç. (Dosyayı çift tıklayar
 `veri/cevaplar.txt` dosyasını düzenle, sonra:
 
 ```bash
-python3 araclar/kelimeleri-hazirla.py
+python3 -m venv araclar/.venv && araclar/.venv/bin/pip install zeyrek   # sadece ilk sefer
+araclar/.venv/bin/python araclar/kelimeleri-hazirla.py
 ```
+
+Üretilen listeler:
+- **Cevaplar**: `veri/cevaplar.txt` (elle seçilmiş yalın kelimeler)
+- **Yalın**: sözlükteki 5 harfli eksiz kelimeler; Arada bunu kullanır
+- **Geçerli**: yalın + sık kullanılan ekli haller ("evden", "aldın"); diğer oyunlar tahmin olarak bunu kabul eder
 
 Site yayına girdikten sonra cevap listesini değiştirmek günlerin kelimelerini kaydırır.
 
 ## Lisanslar
 
-Geçerli kelime listesi [Zemberek-NLP](https://github.com/ahmetaa/zemberek-nlp)
-sözlüğünden üretilmiştir (Apache License 2.0, © Ahmet A. Akın, Mehmet D. Akın).
+- Yalın kelimeler [Zemberek-NLP](https://github.com/ahmetaa/zemberek-nlp)
+  sözlüğünden üretilmiştir (Apache License 2.0, © Ahmet A. Akın, Mehmet D. Akın).
+- Ekli kelimeler [FrequencyWords](https://github.com/hermitdave/FrequencyWords)
+  Türkçe sıklık listesinden seçilmiştir (CC BY-SA 4.0, © Hermit Dave; kaynak
+  verisi OpenSubtitles). Bu yüzden `veri/gecerli.txt` ve `js/kelimeler.js`
+  içindeki kelime listeleri CC BY-SA 4.0 ile paylaşılır.
+- Ekli kelimeler [zeyrek](https://github.com/obulat/zeyrek) (MIT) ile çözümlenerek
+  ayıklanmıştır.

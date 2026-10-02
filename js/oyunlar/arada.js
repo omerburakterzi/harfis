@@ -1,7 +1,7 @@
 // Arada: gizli kelime sözlükte (Türkçe alfabetik sırada) iki kelimenin arasında.
 // Her tahmin aralığın bir ucunu yaklaştırır.
 
-import { CEVAPLAR, GECERLI } from "../kelimeler.js";
+import { CEVAPLAR, GECERLI, YALIN } from "../kelimeler.js";
 import { buyuk, karsilastir, HARFLER } from "../ortak/turkce.js";
 import { gununKelimesi } from "../ortak/gunluk.js";
 import { oku, yaz } from "../ortak/depo.js";
@@ -20,8 +20,10 @@ const TEBRIK = [
 ];
 
 // Sözlük Türkçe alfabeye göre sıralı: C < Ç, G < Ğ, I < İ, O < Ö, S < Ş, U < Ü.
+// Arada sadece yalın kelimeleri kullanır; ekli haller sözlüğü ikiye katlar ve
+// aynı kökün halleri üst üste dizilir (ev, evde, evden...).
 // Başta AAAAA, sonda ZZZZZ: oyun bu iki hayali sınırla başlar, tahmin edilemezler.
-const SOZLUK = ["aaaaa", ...[...GECERLI].sort(karsilastir), "zzzzz"];
+const SOZLUK = ["aaaaa", ...[...YALIN].sort(karsilastir), "zzzzz"];
 const SIRA = new Map(SOZLUK.map((kelime, i) => [kelime, i]));
 
 let cevap;
@@ -191,9 +193,9 @@ function gonder() {
     salla();
     return bildir("Harf sayısı yetersiz");
   }
-  if (!GECERLI.has(mevcut)) {
+  if (!YALIN.has(mevcut)) {
     salla();
-    return bildir("Sözlükte yok");
+    return bildir(GECERLI.has(mevcut) ? "Arada'da sadece eksiz kelimeler geçer" : "Sözlükte yok");
   }
   const sira = SIRA.get(mevcut);
   if (sira <= ust || sira >= alt) {
