@@ -1,4 +1,4 @@
-# Harfiş
+# Harfoni
 
 Türkçe günlük kelime oyunları. Düz HTML/CSS/JS; kurulum gerektirmez.
 

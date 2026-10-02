@@ -1,6 +1,6 @@
 // Tarayıcı hafızası. Gizli sekmede ya da kapalıysa sessizce çalışmaya devam eder.
 
-const ONEK = "harfis.";
+const ONEK = "harfoni.";
 
 export function oku(anahtar, varsayilan) {
   try {
