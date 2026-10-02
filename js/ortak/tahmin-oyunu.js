@@ -9,10 +9,17 @@ import { sonucKaydet } from "./istatistik.js";
 import { klavyeKur } from "./klavye.js";
 import { bildir } from "./arayuz.js";
 import { sayfaKur } from "./sayfa.js";
+import { degerlendir } from "./degerlendir.js";
 
 const UZUNLUK = 5;
 const CEVIRME_ARASI = 280; // ms, harflerin sırayla dönmesi
 const EMOJI = { dogru: "🟦", var: "🟧", yok: "⬛" };
+
+function sayiOzeti(renkler) {
+  const adet = { dogru: 0, var: 0, yok: 0 };
+  for (const d of renkler) adet[d] += 1;
+  return adet;
+}
 
 /**
  * ayarlar:
@@ -22,9 +29,13 @@ const EMOJI = { dogru: "🟦", var: "🟧", yok: "⬛" };
  *   tebrik      : her tahmin sayısı için kazanma mesajı (hak uzunluğunda)
  *   renkler     : (tahmin, cevap, satirNo, tohum) => ["dogru" | "var" | "yok", ...]
  *   klavyeBoya  : tuşlar renklensin mi (varsayılan true)
+ *   sayiIpucu   : kareler renklenmez, satırın yanında sadece kaç harfin
+ *                 doğru / yanlış yerde / yok olduğu yazar (Artı Eksi)
  */
 export function tahminOyunuKur(ayarlar) {
-  const { oyun, ad, hak, tebrik, renkler, klavyeBoya = true } = ayarlar;
+  const { oyun, ad, hak, tebrik, sayiIpucu = false } = ayarlar;
+  const renkler = ayarlar.renkler || ((tahmin, cevap) => degerlendir(tahmin, cevap));
+  const klavyeBoya = ayarlar.klavyeBoya ?? !sayiIpucu;
 
   let cevap;
   let tohum; // oyuna özel rastgelelik (günlükte herkes için aynı)
@@ -43,6 +54,7 @@ export function tahminOyunuKur(ayarlar) {
   function tahtaKur() {
     tahta.innerHTML = "";
     tahta.style.setProperty("--satir-sayisi", hak);
+    tahta.classList.toggle("sayili", sayiIpucu);
     for (let s = 0; s < hak; s++) {
       const satir = document.createElement("div");
       satir.className = "satir";
@@ -50,6 +62,11 @@ export function tahminOyunuKur(ayarlar) {
         const kare = document.createElement("div");
         kare.className = "kare";
         satir.appendChild(kare);
+      }
+      if (sayiIpucu) {
+        const sayilar = document.createElement("div");
+        sayilar.className = "sayilar";
+        satir.appendChild(sayilar);
       }
       tahta.appendChild(satir);
     }
@@ -70,11 +87,13 @@ export function tahminOyunuKur(ayarlar) {
   function satiriBoya(i, tahmin, animasyonlu) {
     const sonuc = satirRenkleri(tahmin, i);
     const kareler = satirEl(i).children;
+    const bulundu = tahmin === cevap;
     sonuc.forEach((durum, h) => {
       const kare = kareler[h];
       kare.textContent = buyuk(tahmin[h]);
       const boya = () => {
-        kare.dataset.durum = durum;
+        if (sayiIpucu && !bulundu) kare.dataset.acik = "";
+        else kare.dataset.durum = durum;
         if (klavyeBoya) klavye.boya(tahmin[h], durum);
       };
       if (animasyonlu) {
@@ -85,6 +104,18 @@ export function tahminOyunuKur(ayarlar) {
         boya();
       }
     });
+    if (sayiIpucu) {
+      const sayilar = satirEl(i).querySelector(".sayilar");
+      const goster = () => {
+        const adet = sayiOzeti(sonuc);
+        sayilar.innerHTML = ["dogru", "var", "yok"]
+          .map((d) => `<span data-durum="${d}">${adet[d]}</span>`)
+          .join("");
+        sayilar.classList.add("gorunur");
+      };
+      if (animasyonlu) setTimeout(goster, UZUNLUK * CEVIRME_ARASI + 100);
+      else goster();
+    }
     const sure = animasyonlu ? (UZUNLUK - 1) * CEVIRME_ARASI + 500 : 0;
     return new Promise((bitince) => setTimeout(bitince, sure));
   }
@@ -160,9 +191,13 @@ export function tahminOyunuKur(ayarlar) {
   }
 
   function paylasimMetni() {
-    const satirlar = tahminler.map((t, i) =>
-      satirRenkleri(t, i).map((d) => EMOJI[d]).join("")
-    );
+    // Artı Eksi'de karelerin yeri gizli, sadece sayılar paylaşılır.
+    const satirlar = tahminler.map((t, i) => {
+      const renk = satirRenkleri(t, i);
+      if (!sayiIpucu) return renk.map((d) => EMOJI[d]).join("");
+      const adet = sayiOzeti(renk);
+      return ["dogru", "var", "yok"].map((d) => EMOJI[d].repeat(adet[d])).join("");
+    });
     const skor = kazandi ? tahminler.length : "X";
     const adres = location.origin + location.pathname;
     return `Harfiyen ${ad} #${gun} ${skor}/${hak}\n\n${satirlar.join("\n")}\n\n${adres}`;
@@ -197,5 +232,5 @@ export function tahminOyunuKur(ayarlar) {
   baslat();
 
   // Oyuna özel eklemeler (ör. Palavra'da kareleri işaretleme) için.
-  return { tahta };
+  return { tahta, klavye };
 }

@@ -524,3 +524,44 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 }
 .uygun-harf.uygun { opacity: 1; background: var(--var); color: #fff; }
 .arada-bilgi { margin-top: 12px; }
+
+/* ---- Artı Eksi ---- */
+.tahta.sayili {
+  aspect-ratio: 6.4 / var(--satir-sayisi);
+  height: auto;
+  width: min(100%, 400px);
+  max-height: 100%;
+}
+@media (max-height: 720px) {
+  .tahta.sayili { width: min(100%, 330px); }
+}
+.tahta.sayili .satir, .sayili-ornek { grid-template-columns: repeat(5, 1fr) 1.4fr; }
+.sayilar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  align-self: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.sayilar.gorunur { opacity: 1; }
+.sayilar span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  color: var(--durum-yazi);
+  font-size: clamp(0.75rem, 3.2vw, 1rem);
+  font-weight: 800;
+}
+.sayilar span[data-durum="dogru"] { background: var(--dogru); }
+.sayilar span[data-durum="var"] { background: var(--var); }
+.sayilar span[data-durum="yok"] { background: var(--yok); }
+.sayili-ornek { display: grid; width: 270px; }
+.sayili-ornek .kare { width: auto; }
+
+.kare[data-acik] { border-color: var(--cizgi-dolu); cursor: pointer; }
+.kare[data-isaret] { color: var(--durum-yazi); border-style: dashed; border-color: var(--durum-yazi); }
+.kare[data-isaret="dogru"] { background: var(--dogru); }
+.kare[data-isaret="var"] { background: var(--var); }
+.kare[data-isaret="yok"] { background: var(--yok); }
