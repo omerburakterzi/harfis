@@ -421,14 +421,61 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
   min-height: 0;
   padding: 10px 16px;
 }
-.sinir-satiri { display: flex; align-items: center; gap: 10px; }
-.kelime-satiri { width: min(64vw, 290px); }
+.arada-izgara {
+  display: grid;
+  grid-template-columns: 18px auto 54px;
+  grid-template-rows: auto auto auto auto auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 6px;
+}
+.arada-izgara > .kelime-satiri, .arada-izgara > .arada-ok { grid-column: 2; }
+.arada-izgara > .arada-ok { text-align: center; }
+.kelime-satiri { width: min(60vw, 280px); }
 .giris-satiri .kare { border-width: 3px; }
 .arada-ok { font-size: 1.4rem; font-weight: 800; color: var(--soluk); line-height: 1; }
-.yakinlik, .yakinlik-bos { flex: none; width: 14px; height: 14px; border-radius: 50%; }
-.yakinlik { border: 2px solid var(--cizgi); transition: background 0.3s, border-color 0.3s; }
-.yakinlik.yanik { background: var(--var); border-color: var(--var); box-shadow: 0 0 10px var(--var); }
-.yakinlik.satir-ici { display: inline-block; vertical-align: middle; width: 12px; height: 12px; }
+
+/* Soldaki dikey ölçek: üst sınırdan alt sınıra, işaret gizli kelimenin yeri. */
+.olcek {
+  grid-column: 1;
+  grid-row: 1 / 6;
+  position: relative;
+  justify-self: center;
+  width: 8px;
+  height: calc(100% - 50px);
+  border-radius: 999px;
+  background: var(--yumusak);
+}
+.olcek-dolgu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--var) 35%, transparent);
+  transition: height 0.5s ease;
+}
+.olcek-isaret, .yakinlik-ornek {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--var);
+  box-shadow: 0 0 10px var(--var);
+}
+.olcek-isaret {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: top 0.5s ease;
+}
+.yakinlik-ornek { display: inline-block; width: 12px; height: 12px; vertical-align: middle; }
+
+.yakinlik-yuzde { grid-column: 3; display: flex; flex-direction: column; line-height: 1.1; }
+.yakinlik-yuzde strong { font-size: 1.15rem; font-variant-numeric: tabular-nums; color: var(--var); }
+.yakinlik-yuzde span { font-size: 0.7rem; color: var(--soluk); }
+#ust-sinir, .ust-yuzde { grid-row: 1; }
+#alt-sinir, .alt-yuzde { grid-row: 5; }
 .giris-satiri.kazandi .kare { animation: sevin 0.6s ease both; }
 .giris-satiri.kazandi .kare:nth-child(2) { animation-delay: 0.08s; }
 .giris-satiri.kazandi .kare:nth-child(3) { animation-delay: 0.16s; }

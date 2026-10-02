@@ -76,11 +76,15 @@ function ekraniGuncelle(degisen) {
   sinirCiz(ustEl, ustKelime, bilinen, degisen === "ust");
   sinirCiz(altEl, altKelime, bilinen, degisen === "alt");
 
-  // Gizli kelime hangi uca daha yakın? O tarafta turuncu nokta yanar.
+  // Gizli kelime aralığın neresinde? 0 = üst sınırda, 1 = alt sınırda.
   const hedef = SIRA.get(cevap);
-  const ustYakin = hedef - ust <= alt - hedef;
-  document.getElementById("ust-nokta").classList.toggle("yanik", !bitti && ustYakin);
-  document.getElementById("alt-nokta").classList.toggle("yanik", !bitti && !ustYakin);
+  const konum = (hedef - ust) / (alt - ust);
+  // Kelime bulunmadan %100 ya da %0 göstermeyelim.
+  const ustYakinlik = Math.min(99, Math.max(1, Math.round((1 - konum) * 100)));
+  document.getElementById("ust-yuzde").textContent = `%${ustYakinlik}`;
+  document.getElementById("alt-yuzde").textContent = `%${100 - ustYakinlik}`;
+  document.getElementById("olcek-isaret").style.top = `${konum * 100}%`;
+  document.getElementById("olcek-dolgu").style.height = `${konum * 100}%`;
 
   const kalanKelime = Math.max(0, alt - ust - 1);
   const elenen = 1 - kalanKelime / (SOZLUK.length - 2);

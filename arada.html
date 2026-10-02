@@ -35,19 +35,18 @@
     </nav>
 
     <main class="arada-alani">
-      <div class="sinir-satiri">
-        <span id="ust-nokta" class="yakinlik" title="Gizli kelime bu uca daha yakın"></span>
+      <div class="arada-izgara">
+        <div class="olcek" aria-hidden="true">
+          <div id="olcek-dolgu" class="olcek-dolgu"></div>
+          <div id="olcek-isaret" class="olcek-isaret"></div>
+        </div>
         <div id="ust-sinir" class="satir kelime-satiri" aria-label="Üst sınır"></div>
-      </div>
-      <div class="arada-ok" aria-hidden="true">↓</div>
-      <div class="sinir-satiri">
-        <span class="yakinlik-bos"></span>
+        <div class="yakinlik-yuzde ust-yuzde"><strong id="ust-yuzde">%50</strong><span>yakın</span></div>
+        <div class="arada-ok" aria-hidden="true">↓</div>
         <div id="giris" class="satir kelime-satiri giris-satiri" aria-label="Tahminin"></div>
-      </div>
-      <div class="arada-ok" aria-hidden="true">↑</div>
-      <div class="sinir-satiri">
-        <span id="alt-nokta" class="yakinlik" title="Gizli kelime bu uca daha yakın"></span>
+        <div class="arada-ok" aria-hidden="true">↑</div>
         <div id="alt-sinir" class="satir kelime-satiri" aria-label="Alt sınır"></div>
+        <div class="yakinlik-yuzde alt-yuzde"><strong id="alt-yuzde">%50</strong><span>yakın</span></div>
       </div>
       <div class="arada-bilgi">
         <div><span>Kalan hak</span><strong id="kalan-hak">18</strong></div>
@@ -72,7 +71,7 @@
       <div class="satir kucuk-satir"><div class="kare">K</div><div class="kare">İ</div><div class="kare">T</div><div class="kare">A</div><div class="kare">P</div></div>
       <p>Gizli kelime KALEM ile KİTAP arasında, mesela KASIM olabilir.</p>
     </div>
-    <p>İki sınırın ortak başladığı harfler <span class="renk-etiketi" data-durum="dogru">renklenir</span>, çünkü gizli kelime de böyle başlamak zorunda. Turuncu nokta <span class="yakinlik yanik satir-ici"></span>, gizli kelimenin hangi sınıra daha yakın olduğunu gösterir.</p>
+    <p>İki sınırın ortak başladığı harfler <span class="renk-etiketi" data-durum="dogru">renklenir</span>, çünkü gizli kelime de böyle başlamak zorunda. Sınırların yanındaki yüzdeler gizli kelimenin o sınıra ne kadar yakın olduğunu, soldaki <span class="yakinlik-ornek"></span> işaret de aralıktaki yerini gösterir. Üste %90 yakınsa kelime üst sınırın hemen altındadır.</p>
     <p>Kelimeyi bulmak için <strong>18 hakkın</strong> var. Aralığın dışındaki kelimeler hak yemez.</p>
     <p class="not">Sıralama Türkçe alfabeye göredir: C'den sonra Ç, G'den sonra Ğ, I'dan sonra İ gelir. Günlük modda herkes aynı kelimeyi çözer, yeni kelime her gece 00.00'da (Türkiye saati) gelir.</p>
   </dialog>
