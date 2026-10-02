@@ -29,6 +29,7 @@ function sayiOzeti(renkler) {
  *   tebrik      : her tahmin sayısı için kazanma mesajı (hak uzunluğunda)
  *   renkler     : (tahmin, cevap, satirNo, tohum) => ["dogru" | "var" | "yok", ...]
  *   klavyeBoya  : tuşlar renklensin mi (varsayılan true)
+ *   emoji       : paylaşım emojilerini değiştirmek için, ör. { yok: "🟥" }
  *   sayiIpucu   : kareler renklenmez, satırın yanında sadece kaç harfin
  *                 doğru / yanlış yerde / yok olduğu yazar (Artı Eksi)
  */
@@ -36,10 +37,12 @@ export function tahminOyunuKur(ayarlar) {
   const { oyun, ad, hak, tebrik, sayiIpucu = false } = ayarlar;
   const renkler = ayarlar.renkler || ((tahmin, cevap) => degerlendir(tahmin, cevap));
   const klavyeBoya = ayarlar.klavyeBoya ?? !sayiIpucu;
+  const emoji = { ...EMOJI, ...ayarlar.emoji };
 
   let cevap;
   let tohum; // oyuna özel rastgelelik (günlükte herkes için aynı)
   let tahminler = [];
+  let notlar = {}; // oyuncunun karelere aldığı notlar: { "satır-harf": değer }
   let mevcut = "";
   let bitti = false;
   let kazandi = false;
@@ -187,16 +190,16 @@ export function tahminOyunuKur(ayarlar) {
 
   function kaydet() {
     if (alistirma) return;
-    yaz(`${oyun}.gunluk`, { gun, tahminler, bitti, kazandi });
+    yaz(`${oyun}.gunluk`, { gun, tahminler, bitti, kazandi, notlar });
   }
 
   function paylasimMetni() {
     // Artı Eksi'de karelerin yeri gizli, sadece sayılar paylaşılır.
     const satirlar = tahminler.map((t, i) => {
       const renk = satirRenkleri(t, i);
-      if (!sayiIpucu) return renk.map((d) => EMOJI[d]).join("");
+      if (!sayiIpucu) return renk.map((d) => emoji[d]).join("");
       const adet = sayiOzeti(renk);
-      return ["dogru", "var", "yok"].map((d) => EMOJI[d].repeat(adet[d])).join("");
+      return ["dogru", "var", "yok"].map((d) => emoji[d].repeat(adet[d])).join("");
     });
     const skor = kazandi ? tahminler.length : "X";
     const adres = location.origin + location.pathname;
@@ -210,6 +213,7 @@ export function tahminOyunuKur(ayarlar) {
     bitti = false;
     kazandi = false;
     tahminler = [];
+    notlar = {};
 
     if (alistirma) {
       cevap = CEVAPLAR[Math.floor(Math.random() * CEVAPLAR.length)];
@@ -225,6 +229,7 @@ export function tahminOyunuKur(ayarlar) {
       tahminler.forEach((t, i) => satiriBoya(i, t, false));
       bitti = kayit.bitti;
       kazandi = kayit.kazandi;
+      notlar = kayit.notlar || {};
       if (bitti) sonucuGoster(400);
     }
   }
@@ -232,5 +237,18 @@ export function tahminOyunuKur(ayarlar) {
   baslat();
 
   // Oyuna özel eklemeler (ör. Palavra'da kareleri işaretleme) için.
-  return { tahta, klavye };
+  return {
+    tahta,
+    klavye,
+    // Oyuncu notları günlük kayıtla birlikte saklanır.
+    notlar: {
+      hepsi: () => notlar,
+      yaz(satir, harf, deger) {
+        const anahtar = `${satir}-${harf}`;
+        if (deger) notlar[anahtar] = deger;
+        else delete notlar[anahtar];
+        kaydet();
+      },
+    },
+  };
 }

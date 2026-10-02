@@ -33,12 +33,26 @@ const oyun = tahminOyunuKur({
 });
 
 // Oyuncu yalan olduğunu düşündüğü kareye dokunup işaretleyebilir.
+// Satırda tek bir kare işaretlenebilir; işaretler kaydedilir.
 oyun.tahta.addEventListener("click", (e) => {
   const kare = e.target.closest(".kare");
   if (!kare || !kare.dataset.durum) return;
   const satir = kare.parentElement;
   if (satir.classList.contains("kazandi")) return;
+  const satirNo = [...oyun.tahta.children].indexOf(satir);
+  const harfNo = [...satir.children].indexOf(kare);
+
   const isaretli = satir.querySelector(".kare.yalan-isareti");
-  if (isaretli && isaretli !== kare) isaretli.classList.remove("yalan-isareti");
-  kare.classList.toggle("yalan-isareti");
+  if (isaretli && isaretli !== kare) {
+    isaretli.classList.remove("yalan-isareti");
+    oyun.notlar.yaz(satirNo, [...satir.children].indexOf(isaretli), null);
+  }
+  const yeniDurum = kare.classList.toggle("yalan-isareti");
+  oyun.notlar.yaz(satirNo, harfNo, yeniDurum ? "yalan" : null);
 });
+
+// Kayıtlı işaretleri geri yükle.
+for (const anahtar of Object.keys(oyun.notlar.hepsi())) {
+  const [satirNo, harfNo] = anahtar.split("-").map(Number);
+  oyun.tahta.children[satirNo]?.children[harfNo]?.classList.add("yalan-isareti");
+}

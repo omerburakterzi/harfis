@@ -13,6 +13,7 @@
   --dogru: #14988f;   /* turkuaz */
   --var: #e48a2e;     /* turuncu */
   --yok: #7d8087;
+  --kirmizi: #d64545;
   --durum-yazi: #ffffff;
 
   --golge: 0 10px 40px rgb(0 0 0 / 0.18);
@@ -34,6 +35,7 @@
     --dogru: #17a398;
     --var: #d9822b;
     --yok: #2e3137;
+    --kirmizi: #c43d3d;
     --golge: 0 10px 40px rgb(0 0 0 / 0.5);
     color-scheme: dark;
   }
@@ -565,3 +567,9 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 .kare[data-isaret="dogru"] { background: var(--dogru); }
 .kare[data-isaret="var"] { background: var(--var); }
 .kare[data-isaret="yok"] { background: var(--yok); }
+
+/* Artı Eksi'de "yok" kırmızı */
+.artieksi .kare[data-isaret="yok"],
+.artieksi .tus[data-durum="yok"],
+.artieksi .sayilar span[data-durum="yok"],
+.artieksi .renk-etiketi[data-durum="yok"] { background: var(--kirmizi); }

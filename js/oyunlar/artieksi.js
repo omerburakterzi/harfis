@@ -12,19 +12,26 @@ const oyun = tahminOyunuKur({
     "Çok iyi!", "Güzel!", "Az kalsın!", "Kıl payı!",
   ],
   sayiIpucu: true,
+  emoji: { yok: "🟥" },
 });
 
 // Oyuncu karelere dokunarak kendi notlarını alır:
-// boş → doğru yerde → başka yerde → yok → boş
+// boş → doğru yerde → başka yerde → yok → boş. Notlar kaydedilir.
 const SIRA = [undefined, "dogru", "var", "yok"];
 
 oyun.tahta.addEventListener("click", (e) => {
   const kare = e.target.closest(".kare");
   if (!kare || !("acik" in kare.dataset)) return;
+  const satir = kare.parentElement;
   const simdiki = SIRA.indexOf(kare.dataset.isaret);
   const sonraki = SIRA[(simdiki + 1) % SIRA.length];
   if (sonraki) kare.dataset.isaret = sonraki;
   else delete kare.dataset.isaret;
+  oyun.notlar.yaz(
+    [...oyun.tahta.children].indexOf(satir),
+    [...satir.children].indexOf(kare),
+    sonraki
+  );
   klavyeyiIsaretlereGoreBoya();
 });
 
@@ -36,3 +43,11 @@ function klavyeyiIsaretlereGoreBoya() {
     oyun.klavye.boya(kucuk(kare.textContent), kare.dataset.isaret);
   }
 }
+
+// Kayıtlı notları geri yükle.
+for (const [anahtar, deger] of Object.entries(oyun.notlar.hepsi())) {
+  const [satirNo, harfNo] = anahtar.split("-").map(Number);
+  const kare = oyun.tahta.children[satirNo]?.children[harfNo];
+  if (kare && "acik" in kare.dataset) kare.dataset.isaret = deger;
+}
+klavyeyiIsaretlereGoreBoya();
