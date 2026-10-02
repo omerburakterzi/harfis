@@ -532,7 +532,7 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 .uygun-harf.uygun { opacity: 1; background: var(--var); color: #fff; }
 .arada-bilgi { margin-top: 12px; }
 
-/* ---- Artı Eksi ---- */
+/* ---- Muamma ---- */
 /* Sayı sütunu tahtayı genişlettiği için hem genişliğe hem yüksekliğe sığdırılır
    (cqw/cqh: tahta alanının genişliği/yüksekliği). */
 .tahta-alani:has(.tahta.sayili) { container-type: size; }
@@ -572,11 +572,11 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 .kare[data-isaret="var"] { background: var(--var); }
 .kare[data-isaret="yok"] { background: var(--yok); }
 
-/* Artı Eksi'de "yok" kırmızı */
-.artieksi .kare[data-isaret="yok"],
-.artieksi .tus[data-durum="yok"],
-.artieksi .sayilar span[data-durum="yok"],
-.artieksi .renk-etiketi[data-durum="yok"] { background: var(--kirmizi); }
+/* Muamma'da "yok" kırmızı */
+.muamma .kare[data-isaret="yok"],
+.muamma .tus[data-durum="yok"],
+.muamma .sayilar span[data-durum="yok"],
+.muamma .renk-etiketi[data-durum="yok"] { background: var(--kirmizi); }
 
 /* ---- Metin sayfaları (Hakkında, Gizlilik) ---- */
 .metin-sayfasi { line-height: 1.6; }

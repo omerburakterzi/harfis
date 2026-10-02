@@ -21,7 +21,7 @@ Harfoni: Kelime Oyunları
 **Kısa açıklama** (en fazla 80 karakter)
 
 ```
-Her gün yeni bulmaca: Klasik, Palavra, Arada ve Artı Eksi. Türkçe kelime oyunu!
+Her gün yeni bulmaca: Klasik, Palavra, Arada ve Muamma. Türkçe kelime oyunu!
 ```
 
 **Tam açıklama** (en fazla 4000 karakter)
@@ -37,7 +37,7 @@ DÖRT OYUN, DÖRT FARKLI ZEKÂ
 
 • Arada: Gizli kelime alfabede iki kelimenin arasında. Her tahminle aralığı daralt, kelimeye ne kadar uzak olduğunu yüzde olarak gör.
 
-• Artı Eksi: Hangi harflerin doğru olduğunu değil, kaç tanesinin doğru olduğunu söyler. Okulda oynadığımız artı-eksi sayı bulmacasının kelimeli hali!
+• Muamma: Hangi harflerin doğru olduğunu değil, kaç tanesinin doğru olduğunu söyler. Okulda oynadığımız artı-eksi sayı bulmacasının kelimeli hali!
 
 ÖZELLİKLER
 

@@ -25,7 +25,7 @@ SAHNELER = [
     ("1-klasik.jpg", "Klasik", "Günün kelimesini 6 tahminde bul"),
     ("2-palavra.jpg", "Palavra", "Her satırda bir renk yalan söylüyor"),
     ("3-arada.jpg", "Arada", "Kelime iki kelimenin arasında"),
-    ("4-artieksi.jpg", "Artı Eksi", "Kaç harf doğru, ama hangileri?"),
+    ("4-muamma.jpg", "Muamma", "Kaç harf doğru, ama hangileri?"),
     ("5-istatistik.jpg", "Serini koru", "Sonucunu arkadaşlarınla paylaş"),
     ("6-anasayfa.jpg", "4 oyun, her gün", "Türkçe günlük kelime oyunları"),
 ]

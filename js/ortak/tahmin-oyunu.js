@@ -31,7 +31,7 @@ function sayiOzeti(renkler) {
  *   klavyeBoya  : tuşlar renklensin mi (varsayılan true)
  *   emoji       : paylaşım emojilerini değiştirmek için, ör. { yok: "🟥" }
  *   sayiIpucu   : kareler renklenmez, satırın yanında sadece kaç harfin
- *                 doğru / yanlış yerde / yok olduğu yazar (Artı Eksi)
+ *                 doğru / yanlış yerde / yok olduğu yazar (Muamma)
  */
 export function tahminOyunuKur(ayarlar) {
   const { oyun, ad, hak, tebrik, sayiIpucu = false } = ayarlar;
@@ -194,7 +194,7 @@ export function tahminOyunuKur(ayarlar) {
   }
 
   function paylasimMetni() {
-    // Artı Eksi'de karelerin yeri gizli, sadece sayılar paylaşılır.
+    // Muamma'da karelerin yeri gizli, sadece sayılar paylaşılır.
     const satirlar = tahminler.map((t, i) => {
       const renk = satirRenkleri(t, i);
       if (!sayiIpucu) return renk.map((d) => emoji[d]).join("");

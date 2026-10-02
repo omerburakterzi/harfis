@@ -1,11 +1,11 @@
 import { tahminOyunuKur } from "../ortak/tahmin-oyunu.js";
 import { kucuk } from "../ortak/turkce.js";
 
-// Artı Eksi: hangi harflerin doğru olduğu söylenmez, sadece kaç tanesinin
+// Muamma: hangi harflerin doğru olduğu söylenmez, sadece kaç tanesinin
 // doğru yerde, yanlış yerde ya da kelimede yok olduğu söylenir.
 const oyun = tahminOyunuKur({
-  oyun: "artieksi",
-  ad: "Artı Eksi",
+  oyun: "muamma",
+  ad: "Muamma",
   hak: 8,
   tebrik: [
     "İnanılmaz!", "Dâhiyane!", "Muhteşem!", "Harika!",

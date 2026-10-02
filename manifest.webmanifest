@@ -1,7 +1,7 @@
 {
   "name": "Harfoni: Türkçe Kelime Oyunları",
   "short_name": "Harfoni",
-  "description": "Her gün yeni kelimeler: Klasik, Palavra, Arada ve Artı Eksi.",
+  "description": "Her gün yeni kelimeler: Klasik, Palavra, Arada ve Muamma.",
   "lang": "tr",
   "id": "/",
   "start_url": "/",
@@ -20,6 +20,6 @@
     { "name": "Klasik", "url": "/klasik.html" },
     { "name": "Palavra", "url": "/palavra.html" },
     { "name": "Arada", "url": "/arada.html" },
-    { "name": "Artı Eksi", "url": "/artieksi.html" }
+    { "name": "Muamma", "url": "/muamma.html" }
   ]
 }

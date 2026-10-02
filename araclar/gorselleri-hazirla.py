@@ -37,23 +37,21 @@ def ortali_yaz(cizim, kutu, metin, boyut, renk=BEYAZ):
 
 
 def simge(boyut, guvenli_alan=1.0):
-    """2x2 renkli kare; sol üstte H harfi. guvenli_alan < 1 ise kenarlarda boşluk
-    bırakır (Android'in yuvarlak/şekilli simge kesimleri için)."""
-    resim = Image.new("RGB", (boyut, boyut), ZEMIN)
+    """Turkuaz zemin, büyük beyaz H ve sağ altta küçük turuncu kare.
+    guvenli_alan < 1 ise içerik ortaya doğru küçülür (Android'in yuvarlak/şekilli
+    simge kesimlerinde kenarlar kırpılabildiği için)."""
+    resim = Image.new("RGB", (boyut, boyut), DOGRU)
     cizim = ImageDraw.Draw(resim)
-    alan = boyut * 0.74 * guvenli_alan
-    bosluk = alan * 0.07
-    kare = (alan - bosluk) / 2
-    bas = (boyut - alan) / 2
-    renkler = [[DOGRU, VAR], [YOK, DOGRU]]
-    for satir in range(2):
-        for sutun in range(2):
-            x = bas + sutun * (kare + bosluk)
-            y = bas + satir * (kare + bosluk)
-            kutu = (x, y, x + kare, y + kare)
-            cizim.rounded_rectangle(kutu, radius=kare * 0.16, fill=renkler[satir][sutun])
-            if satir == 0 and sutun == 0:
-                ortali_yaz(cizim, kutu, "H", int(kare * 0.62))
+    orta = boyut / 2
+    harf_kutusu = boyut * 0.96 * guvenli_alan
+    ust = orta - harf_kutusu / 2
+    ortali_yaz(cizim, (ust, ust, ust + harf_kutusu, ust + harf_kutusu), "H", int(boyut * 0.645 * guvenli_alan))
+    kare = boyut * 0.168 * guvenli_alan
+    merkez = orta + boyut * 0.287 * guvenli_alan
+    cizim.rounded_rectangle(
+        (merkez - kare / 2, merkez - kare / 2, merkez + kare / 2, merkez + kare / 2),
+        radius=kare * 0.16, fill=VAR,
+    )
     return resim
 
 
@@ -76,7 +74,7 @@ def paylasim_gorseli():
         ortali_yaz(cizim, kutu, harf, 70)
 
     ortali_yaz(cizim, (0, 320, genislik, 400), "Türkçe günlük kelime oyunları", 50)
-    ortali_yaz(cizim, (0, 410, genislik, 460), "Klasik · Palavra · Arada · Artı Eksi", 34, SOLUK)
+    ortali_yaz(cizim, (0, 410, genislik, 460), "Klasik · Palavra · Arada · Muamma", 34, SOLUK)
     ortali_yaz(cizim, (0, 520, genislik, 570), "harfoni.com", 34, DOGRU)
     return resim
 
@@ -98,7 +96,7 @@ def tanitim_gorseli():
         cizim.rounded_rectangle(kutu, radius=12, fill=renk)
         ortali_yaz(cizim, kutu, harf, 62)
     ortali_yaz(cizim, (0, 270, genislik, 330), "Türkçe günlük kelime oyunları", 44)
-    ortali_yaz(cizim, (0, 345, genislik, 385), "Klasik · Palavra · Arada · Artı Eksi", 30, SOLUK)
+    ortali_yaz(cizim, (0, 345, genislik, 385), "Klasik · Palavra · Arada · Muamma", 30, SOLUK)
     return resim
 
 
@@ -106,7 +104,7 @@ def main():
     HEDEF.mkdir(exist_ok=True)
     simge(512).save(HEDEF / "simge-512.png")
     simge(192).save(HEDEF / "simge-192.png")
-    simge(512, guvenli_alan=0.78).save(HEDEF / "simge-maskable-512.png")
+    simge(512, guvenli_alan=0.72).save(HEDEF / "simge-maskable-512.png")
     simge(180).save(HEDEF / "apple-touch-icon.png")
     simge(32).save(HEDEF / "favicon-32.png")
     paylasim_gorseli().save(HEDEF / "paylasim.png", optimize=True)
