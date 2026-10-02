@@ -7,7 +7,10 @@ const SATIRLAR = [
   ["gir", "z", "c", "v", "b", "n", "m", "ö", "ç", "sil"],
 ];
 
-const ONCELIK = { yok: 1, var: 2, dogru: 3 };
+// Bir tuş daha bilgilendirici bir renk aldıysa daha az bilgilendiricisine dönmez.
+// İki ihtimalli durumlar (Palavra'da yalan denen kareler) kesin renklerden
+// önce gelir: kesin bilgi her zaman öne geçer.
+const ONCELIK = { "var-yok": 1, "dogru-yok": 2, "dogru-var": 3, yok: 4, var: 5, dogru: 6 };
 
 const SIL_IKONU =
   '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"/></svg>';
@@ -60,7 +63,6 @@ export function klavyeKur(kap, tusaBasildi) {
   });
 
   return {
-    // Bir harf daha iyi bir renk aldıysa tuşu boyar, kötüsüne geri dönmez.
     boya(harf, durum) {
       const btn = tuslar[harf];
       if (!btn) return;

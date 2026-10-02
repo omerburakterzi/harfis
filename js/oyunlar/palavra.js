@@ -58,17 +58,19 @@ for (const anahtar of Object.keys(oyun.notlar.hepsi())) {
   oyun.tahta.children[satirNo]?.children[harfNo]?.classList.add("yalan-isareti");
 }
 
-// Klavye karelerde görünen renklerle boyanır, ama oyuncunun "yalan" dediği
-// kareler hesaba katılmaz. Yalan denen kare gri görünüyorsa gerçeği "doğru
-// yerde" ya da "başka yerde" olmalı; yani harf kelimede var demektir.
-// Yeşil ya da turuncu bir kareye yalan denirse o kareden bilgi alınmaz.
+// Yalan denen karenin gerçek rengi, görünen dışındaki iki renkten biridir.
+// Klavyede bu iki ihtimal tuşun iki yarısına boyanır.
+const YALANIN_GERCEGI = { yok: "dogru-var", dogru: "var-yok", var: "dogru-yok" };
+
+// Klavye karelerde görünen renklerle boyanır; oyuncunun yalan dediği kareler
+// iki ihtimalli olarak boyanır. Kesin renkler ihtimallilerin önüne geçer.
 function klavyeyiBoya() {
   oyun.klavye.temizle();
   for (const kare of oyun.tahta.querySelectorAll(".kare[data-durum]")) {
     const harf = kucuk(kare.textContent);
     const durum = kare.dataset.durum;
-    if (!kare.classList.contains("yalan-isareti")) oyun.klavye.boya(harf, durum);
-    else if (durum === "yok") oyun.klavye.boya(harf, "var");
+    const yalan = kare.classList.contains("yalan-isareti");
+    oyun.klavye.boya(harf, yalan ? YALANIN_GERCEGI[durum] : durum);
   }
 }
 klavyeyiBoya();

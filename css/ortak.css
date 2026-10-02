@@ -239,6 +239,11 @@ button { font: inherit; color: inherit; }
 .tus[data-durum="dogru"] { background: var(--dogru); }
 .tus[data-durum="var"] { background: var(--var); }
 .tus[data-durum="yok"] { background: var(--yok); }
+/* Palavra: yalan denen karenin iki ihtimali, tuşun iki yarısında */
+.tus[data-durum="dogru-var"] { background: linear-gradient(135deg, var(--dogru) 50%, var(--var) 50%); }
+.tus[data-durum="var-yok"] { background: linear-gradient(135deg, var(--var) 50%, var(--yok) 50%); }
+.tus[data-durum="dogru-yok"] { background: linear-gradient(135deg, var(--dogru) 50%, var(--yok) 50%); }
+.renk-etiketi.iki-ihtimal { background: linear-gradient(135deg, var(--dogru) 50%, var(--var) 50%); }
 
 @media (max-height: 640px) {
   .tus { height: 48px; }
