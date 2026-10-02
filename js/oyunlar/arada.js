@@ -77,15 +77,15 @@ function ekraniGuncelle(degisen) {
   sinirCiz(ustEl, ustKelime, bilinen, degisen === "ust");
   sinirCiz(altEl, altKelime, bilinen, degisen === "alt");
 
-  // Gizli kelime aralığın neresinde? 0 = üst sınırda, 1 = alt sınırda.
-  // İlk tahmine kadar gösterilmez.
+  // Uzaklık: gizli kelime ile sınır arasında sözlüğün yüzde kaçı var.
+  // Tahmin ettikçe sadece küçülür. İlk tahmine kadar gösterilmez.
   const hedef = SIRA.get(cevap);
-  const konum = (hedef - ust) / (alt - ust);
+  const toplam = SOZLUK.length - 1;
   const baslangic = tahminler.length === 0;
-  // Kelime bulunmadan %100 ya da %0 göstermeyelim.
-  const ustYakinlik = Math.min(99, Math.max(1, Math.round((1 - konum) * 100)));
-  document.getElementById("ust-yuzde").textContent = baslangic ? "?" : `%${ustYakinlik}`;
-  document.getElementById("alt-yuzde").textContent = baslangic ? "?" : `%${100 - ustYakinlik}`;
+  document.getElementById("ust-yuzde").textContent = baslangic ? "?" : uzaklikYaz((hedef - ust) / toplam);
+  document.getElementById("alt-yuzde").textContent = baslangic ? "?" : uzaklikYaz((alt - hedef) / toplam);
+  // Soldaki işaret kelimenin kalan aralıktaki yerini gösterir: 0 = üstte, 1 = altta.
+  const konum = (hedef - ust) / (alt - ust);
   const isaret = document.getElementById("olcek-isaret");
   isaret.hidden = baslangic;
   isaret.style.top = `${konum * 100}%`;
@@ -111,6 +111,14 @@ function girisCiz() {
     else delete kare.dataset.durum;
   });
   harfleriGuncelle();
+}
+
+// Uzaklığı okunaklı yazar: %16, %2,8, %0,94 gibi. Sıfıra hiç inmez.
+function uzaklikYaz(oran) {
+  const yuzde = oran * 100;
+  const basamak = yuzde >= 10 ? 0 : yuzde >= 1 ? 1 : 2;
+  const deger = Math.max(yuzde, 0.01);
+  return "%" + deger.toLocaleString("tr-TR", { maximumFractionDigits: basamak });
 }
 
 // Sıradaki harf için sınırların arasında kalan harfleri parlatır.
