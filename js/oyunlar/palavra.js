@@ -1,6 +1,7 @@
 import { tahminOyunuKur } from "../ortak/tahmin-oyunu.js";
 import { degerlendir } from "../ortak/degerlendir.js";
 import { rastgeleUretec } from "../ortak/rastgele.js";
+import { kucuk } from "../ortak/turkce.js";
 
 const DURUMLAR = ["dogru", "var", "yok"];
 
@@ -29,7 +30,6 @@ const oyun = tahminOyunuKur({
     "Çok iyi!", "Güzel!", "Az kalsın!", "Kıl payı!",
   ],
   renkler: palavraRenkleri,
-  klavyeBoya: false, // renkler yalan söyleyebildiği için klavye boyanmaz
 });
 
 // Oyuncu yalan olduğunu düşündüğü kareye dokunup işaretleyebilir.
@@ -49,6 +49,7 @@ oyun.tahta.addEventListener("click", (e) => {
   }
   const yeniDurum = kare.classList.toggle("yalan-isareti");
   oyun.notlar.yaz(satirNo, harfNo, yeniDurum ? "yalan" : null);
+  klavyeyiBoya();
 });
 
 // Kayıtlı işaretleri geri yükle.
@@ -56,3 +57,18 @@ for (const anahtar of Object.keys(oyun.notlar.hepsi())) {
   const [satirNo, harfNo] = anahtar.split("-").map(Number);
   oyun.tahta.children[satirNo]?.children[harfNo]?.classList.add("yalan-isareti");
 }
+
+// Klavye karelerde görünen renklerle boyanır, ama oyuncunun "yalan" dediği
+// kareler hesaba katılmaz. Yalan denen kare gri görünüyorsa gerçeği "doğru
+// yerde" ya da "başka yerde" olmalı; yani harf kelimede var demektir.
+// Yeşil ya da turuncu bir kareye yalan denirse o kareden bilgi alınmaz.
+function klavyeyiBoya() {
+  oyun.klavye.temizle();
+  for (const kare of oyun.tahta.querySelectorAll(".kare[data-durum]")) {
+    const harf = kucuk(kare.textContent);
+    const durum = kare.dataset.durum;
+    if (!kare.classList.contains("yalan-isareti")) oyun.klavye.boya(harf, durum);
+    else if (durum === "yok") oyun.klavye.boya(harf, "var");
+  }
+}
+klavyeyiBoya();
