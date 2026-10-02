@@ -419,7 +419,7 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
   justify-content: center;
   gap: 6px;
   min-height: 0;
-  padding: 10px 16px;
+  padding: 10px 12px;
 }
 .arada-izgara {
   display: grid;
@@ -500,3 +500,27 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 }
 #ilerleme { height: 100%; width: 0; background: var(--dogru); transition: width 0.5s ease; }
 .arada-ornek-ok { margin: 4px 0 !important; color: var(--soluk); font-weight: 700; }
+
+.uygun-harfler {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+  width: min(100%, 420px);
+  margin-top: 16px;
+}
+.uygun-harf {
+  width: calc((100% - 14 * 3px) / 15);
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--yumusak);
+  color: var(--soluk);
+  font-size: clamp(0.7rem, 3vw, 0.95rem);
+  font-weight: 700;
+  opacity: 0.3;
+  transition: opacity 0.2s, background 0.2s;
+}
+.uygun-harf.uygun { opacity: 1; background: var(--var); color: #fff; }
+.arada-bilgi { margin-top: 12px; }

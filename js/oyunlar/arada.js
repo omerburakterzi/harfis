@@ -2,7 +2,7 @@
 // Her tahmin aralığın bir ucunu yaklaştırır.
 
 import { CEVAPLAR, GECERLI } from "../kelimeler.js";
-import { buyuk, karsilastir } from "../ortak/turkce.js";
+import { buyuk, karsilastir, HARFLER } from "../ortak/turkce.js";
 import { gununKelimesi } from "../ortak/gunluk.js";
 import { oku, yaz } from "../ortak/depo.js";
 import { sonucKaydet } from "../ortak/istatistik.js";
@@ -20,7 +20,8 @@ const TEBRIK = [
 ];
 
 // Sözlük Türkçe alfabeye göre sıralı: C < Ç, G < Ğ, I < İ, O < Ö, S < Ş, U < Ü.
-const SOZLUK = [...GECERLI].sort(karsilastir);
+// Başta AAAAA, sonda ZZZZZ: oyun bu iki hayali sınırla başlar, tahmin edilemezler.
+const SOZLUK = ["aaaaa", ...[...GECERLI].sort(karsilastir), "zzzzz"];
 const SIRA = new Map(SOZLUK.map((kelime, i) => [kelime, i]));
 
 let cevap;
@@ -77,14 +78,18 @@ function ekraniGuncelle(degisen) {
   sinirCiz(altEl, altKelime, bilinen, degisen === "alt");
 
   // Gizli kelime aralığın neresinde? 0 = üst sınırda, 1 = alt sınırda.
+  // İlk tahmine kadar gösterilmez.
   const hedef = SIRA.get(cevap);
   const konum = (hedef - ust) / (alt - ust);
+  const baslangic = tahminler.length === 0;
   // Kelime bulunmadan %100 ya da %0 göstermeyelim.
   const ustYakinlik = Math.min(99, Math.max(1, Math.round((1 - konum) * 100)));
-  document.getElementById("ust-yuzde").textContent = `%${ustYakinlik}`;
-  document.getElementById("alt-yuzde").textContent = `%${100 - ustYakinlik}`;
-  document.getElementById("olcek-isaret").style.top = `${konum * 100}%`;
-  document.getElementById("olcek-dolgu").style.height = `${konum * 100}%`;
+  document.getElementById("ust-yuzde").textContent = baslangic ? "?" : `%${ustYakinlik}`;
+  document.getElementById("alt-yuzde").textContent = baslangic ? "?" : `%${100 - ustYakinlik}`;
+  const isaret = document.getElementById("olcek-isaret");
+  isaret.hidden = baslangic;
+  isaret.style.top = `${konum * 100}%`;
+  document.getElementById("olcek-dolgu").style.height = baslangic ? "0" : `${konum * 100}%`;
 
   const kalanKelime = Math.max(0, alt - ust - 1);
   const elenen = 1 - kalanKelime / (SOZLUK.length - 2);
@@ -105,6 +110,37 @@ function girisCiz() {
     else if (bitti) kare.dataset.durum = "var";
     else delete kare.dataset.durum;
   });
+  harfleriGuncelle();
+}
+
+// Sıradaki harf için sınırların arasında kalan harfleri parlatır.
+// Örneğin sınırlar BLANK ve FAİRY ise ilk harf B, C, Ç, D, E ya da F olabilir;
+// B yazınca ikinci harf L ya da sonrası olmalıdır.
+function harfleriKur() {
+  const kap = document.getElementById("uygun-harfler");
+  kap.innerHTML = "";
+  for (const harf of HARFLER) {
+    const el = document.createElement("span");
+    el.className = "uygun-harf";
+    el.dataset.harf = harf;
+    el.textContent = buyuk(harf);
+    kap.appendChild(el);
+  }
+}
+
+function harfleriGuncelle() {
+  const sira = mevcut.length;
+  const ustBas = SOZLUK[ust].slice(0, sira + 1);
+  const altBas = SOZLUK[alt].slice(0, sira + 1);
+  for (const el of document.querySelectorAll(".uygun-harf")) {
+    const aday = mevcut + el.dataset.harf;
+    const uygun =
+      !bitti &&
+      sira < UZUNLUK &&
+      karsilastir(aday, ustBas) >= 0 &&
+      karsilastir(aday, altBas) <= 0;
+    el.classList.toggle("uygun", uygun);
+  }
 }
 
 function salla() {
@@ -201,6 +237,7 @@ function paylasimMetni() {
 }
 
 function baslat() {
+  harfleriKur();
   kareleriKur(ustEl);
   kareleriKur(altEl);
   kareleriKur(girisEl);
