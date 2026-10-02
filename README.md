@@ -22,6 +22,9 @@ Sonra tarayıcıda http://localhost:8123 adresini aç. (Dosyayı çift tıklayar
 - `js/ortak/tahmin-oyunu.js`: harf tablolu oyunların (Klasik, Palavra, Artı Eksi) ortak altyapısı
 - `js/ortak/`: diğer ortak parçalar (klavye, günün kelimesi, renk değerlendirme, Türkçe harf işlemleri)
 - `css/ortak.css`: tüm tasarım
+- `hakkinda.html`, `gizlilik.html`: bilgi sayfaları
+- `manifest.webmanifest`, `sw.js`: telefona kurulabilen uygulama (PWA) ve internetsiz çalışma
+- `gorseller/`: uygulama simgeleri ve paylaşım görseli (`araclar/gorselleri-hazirla.py` ile üretilir)
 - `veri/cevaplar.txt`: günün kelimesi olabilecek kelimeler (elle seçilir)
 - `veri/gecerli.txt`, `js/kelimeler.js`: üretilen dosyalar, elle değiştirilmez
 

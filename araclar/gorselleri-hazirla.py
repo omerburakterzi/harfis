@@ -1,0 +1,96 @@
+"""Uygulama simgelerini ve sosyal medya paylaşım görselini üretir.
+
+Kullanım (proje klasöründen):
+    araclar/.venv/bin/pip install pillow   # bir kez
+    araclar/.venv/bin/python araclar/gorselleri-hazirla.py
+
+Renkler css/ortak.css içindeki karanlık tema renkleriyle aynıdır.
+"""
+
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+KOK = Path(__file__).resolve().parent.parent
+HEDEF = KOK / "gorseller"
+YAZI_TIPI = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+
+ZEMIN = "#121417"
+DOGRU = "#17a398"
+VAR = "#d9822b"
+YOK = "#3b3f46"
+BEYAZ = "#ffffff"
+SOLUK = "#9a9ea6"
+
+
+def yazi_tipi(boyut):
+    return ImageFont.truetype(YAZI_TIPI, boyut)
+
+
+def ortali_yaz(cizim, kutu, metin, boyut, renk=BEYAZ):
+    x0, y0, x1, y1 = kutu
+    font = yazi_tipi(boyut)
+    sol, ust, sag, alt = cizim.textbbox((0, 0), metin, font=font)
+    x = x0 + (x1 - x0 - (sag - sol)) / 2 - sol
+    y = y0 + (y1 - y0 - (alt - ust)) / 2 - ust
+    cizim.text((x, y), metin, font=font, fill=renk)
+
+
+def simge(boyut, guvenli_alan=1.0):
+    """2x2 renkli kare; sol üstte H harfi. guvenli_alan < 1 ise kenarlarda boşluk
+    bırakır (Android'in yuvarlak/şekilli simge kesimleri için)."""
+    resim = Image.new("RGB", (boyut, boyut), ZEMIN)
+    cizim = ImageDraw.Draw(resim)
+    alan = boyut * 0.74 * guvenli_alan
+    bosluk = alan * 0.07
+    kare = (alan - bosluk) / 2
+    bas = (boyut - alan) / 2
+    renkler = [[DOGRU, VAR], [YOK, DOGRU]]
+    for satir in range(2):
+        for sutun in range(2):
+            x = bas + sutun * (kare + bosluk)
+            y = bas + satir * (kare + bosluk)
+            kutu = (x, y, x + kare, y + kare)
+            cizim.rounded_rectangle(kutu, radius=kare * 0.16, fill=renkler[satir][sutun])
+            if satir == 0 and sutun == 0:
+                ortali_yaz(cizim, kutu, "H", int(kare * 0.62))
+    return resim
+
+
+def paylasim_gorseli():
+    genislik, yukseklik = 1200, 630
+    resim = Image.new("RGB", (genislik, yukseklik), ZEMIN)
+    cizim = ImageDraw.Draw(resim)
+
+    # Üstte HARFONİ yazan renkli kareler
+    harfler = "HARFONİ"
+    renkler = [DOGRU, VAR, YOK, DOGRU, DOGRU, YOK, VAR]
+    kare, bosluk = 112, 14
+    toplam = len(harfler) * kare + (len(harfler) - 1) * bosluk
+    x0 = (genislik - toplam) / 2
+    y0 = 150
+    for i, (harf, renk) in enumerate(zip(harfler, renkler)):
+        x = x0 + i * (kare + bosluk)
+        kutu = (x, y0, x + kare, y0 + kare)
+        cizim.rounded_rectangle(kutu, radius=14, fill=renk)
+        ortali_yaz(cizim, kutu, harf, 70)
+
+    ortali_yaz(cizim, (0, 320, genislik, 400), "Türkçe günlük kelime oyunları", 50)
+    ortali_yaz(cizim, (0, 410, genislik, 460), "Klasik · Palavra · Arada · Artı Eksi", 34, SOLUK)
+    ortali_yaz(cizim, (0, 520, genislik, 570), "harfoni.com", 34, DOGRU)
+    return resim
+
+
+def main():
+    HEDEF.mkdir(exist_ok=True)
+    simge(512).save(HEDEF / "simge-512.png")
+    simge(192).save(HEDEF / "simge-192.png")
+    simge(512, guvenli_alan=0.78).save(HEDEF / "simge-maskable-512.png")
+    simge(180).save(HEDEF / "apple-touch-icon.png")
+    simge(32).save(HEDEF / "favicon-32.png")
+    paylasim_gorseli().save(HEDEF / "paylasim.png", optimize=True)
+    print("Görseller gorseller/ klasörüne yazıldı.")
+
+
+if __name__ == "__main__":
+    main()

@@ -578,3 +578,18 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 .artieksi .tus[data-durum="yok"],
 .artieksi .sayilar span[data-durum="yok"],
 .artieksi .renk-etiketi[data-durum="yok"] { background: var(--kirmizi); }
+
+/* ---- Metin sayfaları (Hakkında, Gizlilik) ---- */
+.metin-sayfasi { line-height: 1.6; }
+.metin-sayfasi h1 { margin: 12px 0 16px; font-size: 1.9rem; }
+.metin-sayfasi h2 { margin: 28px 0 8px; font-size: 1.15rem; }
+.metin-sayfasi a { color: var(--dogru); }
+.metin-sayfasi ul { padding-left: 20px; }
+.metin-sayfasi li { margin: 6px 0; }
+.geri-baglanti { font-size: 0.9rem; text-decoration: none; color: var(--soluk) !important; }
+.alt-bilgi a { color: inherit; }
+
+/* ---- Ana sayfa: uygulama kurulumu ---- */
+.kurulum { margin-top: 28px; text-align: center; }
+.kurulum .ana-dugme { margin: 0 auto; }
+.kurulum .not { border: 0; padding: 0; }

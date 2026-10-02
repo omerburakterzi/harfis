@@ -1,0 +1,25 @@
+{
+  "name": "Harfoni: Türkçe Kelime Oyunları",
+  "short_name": "Harfoni",
+  "description": "Her gün yeni kelimeler: Klasik, Palavra, Arada ve Artı Eksi.",
+  "lang": "tr",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#121417",
+  "theme_color": "#121417",
+  "categories": ["games", "education", "entertainment"],
+  "icons": [
+    { "src": "gorseller/simge-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "gorseller/simge-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "gorseller/simge-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Klasik", "url": "/klasik.html" },
+    { "name": "Palavra", "url": "/palavra.html" },
+    { "name": "Arada", "url": "/arada.html" },
+    { "name": "Artı Eksi", "url": "/artieksi.html" }
+  ]
+}
