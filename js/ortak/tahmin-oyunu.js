@@ -1,13 +1,14 @@
-// Harf tahminine dayalı oyunların ortak altyapısı: tahta, klavye, günlük kayıt,
-// istatistik, sonuç penceresi ve paylaşma. Oyunlar sadece kurallarını verir.
+// Harf tablosuna dayalı oyunların (Klasik, Palavra) ortak altyapısı:
+// tahta, klavye, günlük kayıt ve paylaşım metni. Oyunlar sadece kurallarını verir.
 
 import { CEVAPLAR, GECERLI } from "../kelimeler.js";
 import { buyuk } from "./turkce.js";
-import { bugununNumarasi, gununKelimesi, yeniGuneKalan, sureYaz } from "./gunluk.js";
+import { gununKelimesi } from "./gunluk.js";
 import { oku, yaz } from "./depo.js";
-import { istatistikOku, sonucKaydet, guncelSeri } from "./istatistik.js";
+import { sonucKaydet } from "./istatistik.js";
 import { klavyeKur } from "./klavye.js";
-import { bildir, pencereAc, pencereleriBagla, paylas } from "./arayuz.js";
+import { bildir } from "./arayuz.js";
+import { sayfaKur } from "./sayfa.js";
 
 const UZUNLUK = 5;
 const CEVIRME_ARASI = 280; // ms, harflerin sırayla dönmesi
@@ -25,9 +26,6 @@ const EMOJI = { dogru: "🟦", var: "🟧", yok: "⬛" };
 export function tahminOyunuKur(ayarlar) {
   const { oyun, ad, hak, tebrik, renkler, klavyeBoya = true } = ayarlar;
 
-  const alistirma = new URLSearchParams(location.search).get("mod") === "alistirma";
-  const gun = bugununNumarasi();
-
   let cevap;
   let tohum; // oyuna özel rastgelelik (günlükte herkes için aynı)
   let tahminler = [];
@@ -35,6 +33,9 @@ export function tahminOyunuKur(ayarlar) {
   let bitti = false;
   let kazandi = false;
   let kilitli = false;
+
+  const sayfa = sayfaKur({ oyun, hak, tebrik, yeniOyun: baslat, paylasimMetni });
+  const { alistirma, gun } = sayfa;
 
   const tahta = document.getElementById("tahta");
   const klavye = klavyeKur(document.getElementById("klavye"), tusaBasildi);
@@ -146,7 +147,11 @@ export function tahminOyunuKur(ayarlar) {
       bildir(buyuk(cevap), 3000);
     }
     if (!alistirma) sonucKaydet(oyun, hak, gun, kazandi, tahminler.length);
-    setTimeout(sonucPenceresiniAc, 1700);
+    sonucuGoster(1700);
+  }
+
+  function sonucuGoster(gecikme) {
+    sayfa.sonucuGoster({ bitti, kazandi, tahminSayisi: tahminler.length, cevap }, gecikme);
   }
 
   function kaydet() {
@@ -162,65 +167,6 @@ export function tahminOyunuKur(ayarlar) {
     const adres = location.origin + location.pathname;
     return `Harfiyen ${ad} #${gun} ${skor}/${hak}\n\n${satirlar.join("\n")}\n\n${adres}`;
   }
-
-  // ---- Sonuç ve istatistik penceresi ----
-
-  let geriSayim;
-
-  function sonucPenceresiniAc() {
-    istatistikleriDoldur();
-    pencereAc("sonuc-penceresi");
-  }
-
-  function istatistikleriDoldur() {
-    const ist = istatistikOku(oyun, hak);
-    document.getElementById("ist-baslik").textContent = alistirma
-      ? "Günlük oyun istatistikleri"
-      : "İstatistikler";
-    const sayi = (id, deger) => (document.getElementById(id).textContent = deger);
-    sayi("ist-oynanan", ist.oynanan);
-    sayi("ist-yuzde", ist.oynanan ? Math.round((ist.kazanilan / ist.oynanan) * 100) : 0);
-    sayi("ist-seri", guncelSeri(ist, gun));
-    sayi("ist-en-uzun", ist.enUzunSeri);
-
-    const dagilim = document.getElementById("dagilim");
-    dagilim.innerHTML = "";
-    const enCok = Math.max(1, ...ist.dagilim);
-    ist.dagilim.forEach((adet, i) => {
-      const satir = document.createElement("div");
-      satir.className = "dagilim-satir";
-      const vurgu = bitti && kazandi && !alistirma && tahminler.length === i + 1;
-      satir.innerHTML = `<span>${i + 1}</span><div class="cubuk${vurgu ? " vurgu" : ""}" style="width:${Math.max(8, (adet / enCok) * 100)}%">${adet}</div>`;
-      dagilim.appendChild(satir);
-    });
-
-    document.getElementById("oyun-sonu").hidden = !bitti;
-    if (!bitti) return;
-
-    document.getElementById("sonuc-baslik").textContent = kazandi
-      ? tebrik[tahminler.length - 1]
-      : "Bu sefer olmadı";
-    const kelimeLink = document.getElementById("sonuc-kelime");
-    kelimeLink.textContent = buyuk(cevap);
-    kelimeLink.href = `https://sozluk.gov.tr/?kelime=${encodeURIComponent(cevap)}`;
-
-    document.getElementById("paylas").hidden = alistirma;
-    document.getElementById("yeni-kelime").hidden = !alistirma;
-    document.getElementById("geri-sayim-kutu").hidden = alistirma;
-
-    clearInterval(geriSayim);
-    if (!alistirma) {
-      const guncelle = () => {
-        const kalan = yeniGuneKalan();
-        document.getElementById("geri-sayim").textContent = sureYaz(kalan);
-        if (kalan < 1000) setTimeout(() => location.reload(), 1500);
-      };
-      guncelle();
-      geriSayim = setInterval(guncelle, 1000);
-    }
-  }
-
-  // ---- Başlangıç ----
 
   function baslat() {
     tahtaKur();
@@ -244,32 +190,12 @@ export function tahminOyunuKur(ayarlar) {
       tahminler.forEach((t, i) => satiriBoya(i, t, false));
       bitti = kayit.bitti;
       kazandi = kayit.kazandi;
-      if (bitti) setTimeout(sonucPenceresiniAc, 400);
+      if (bitti) sonucuGoster(400);
     }
   }
 
-  document.getElementById("mod-gunluk").classList.toggle("secili", !alistirma);
-  document.getElementById("mod-alistirma").classList.toggle("secili", alistirma);
-  document.getElementById("gun-no").textContent = alistirma ? "Alıştırma" : `#${gun}`;
-
-  document.getElementById("istatistik-ac").addEventListener("click", sonucPenceresiniAc);
-  document.getElementById("paylas").addEventListener("click", () => paylas(paylasimMetni()));
-  document.getElementById("yeni-kelime").addEventListener("click", () => {
-    document.getElementById("sonuc-penceresi").close();
-    baslat();
-  });
-  pencereleriBagla();
-
   baslat();
 
-  if (!oku(`${oyun}.yardim-goruldu`, false)) {
-    pencereAc("yardim-penceresi");
-    yaz(`${oyun}.yardim-goruldu`, true);
-  }
-
   // Oyuna özel eklemeler (ör. Palavra'da kareleri işaretleme) için.
-  return {
-    tahta,
-    tahminSayisi: () => tahminler.length,
-  };
+  return { tahta };
 }
