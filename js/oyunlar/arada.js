@@ -243,7 +243,7 @@ function paylasimMetni() {
   });
   const skor = kazandi ? tahminler.length : "X";
   const adres = location.origin + location.pathname;
-  return `Harfiyen Arada #${gun} ${skor}/${HAK}\n\n${oklar.join("")}\n\n${adres}`;
+  return `Harfiş Arada #${gun} ${skor}/${HAK}\n\n${oklar.join("")}\n\n${adres}`;
 }
 
 function baslat() {

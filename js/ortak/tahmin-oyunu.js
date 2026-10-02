@@ -203,7 +203,7 @@ export function tahminOyunuKur(ayarlar) {
     });
     const skor = kazandi ? tahminler.length : "X";
     const adres = location.origin + location.pathname;
-    return `Harfiyen ${ad} #${gun} ${skor}/${hak}\n\n${satirlar.join("\n")}\n\n${adres}`;
+    return `Harfiş ${ad} #${gun} ${skor}/${hak}\n\n${satirlar.join("\n")}\n\n${adres}`;
   }
 
   function baslat() {
