@@ -533,14 +533,13 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 .arada-bilgi { margin-top: 12px; }
 
 /* ---- Artı Eksi ---- */
+/* Sayı sütunu tahtayı genişlettiği için hem genişliğe hem yüksekliğe sığdırılır
+   (cqw/cqh: tahta alanının genişliği/yüksekliği). */
+.tahta-alani:has(.tahta.sayili) { container-type: size; }
 .tahta.sayili {
   aspect-ratio: 6.4 / var(--satir-sayisi);
   height: auto;
-  width: min(100%, 400px);
-  max-height: 100%;
-}
-@media (max-height: 720px) {
-  .tahta.sayili { width: min(100%, 330px); }
+  width: min(100cqw, 400px, calc(100cqh * 6.4 / var(--satir-sayisi)));
 }
 .tahta.sayili .satir, .sayili-ornek { grid-template-columns: repeat(5, 1fr) 1.4fr; }
 .sayilar {

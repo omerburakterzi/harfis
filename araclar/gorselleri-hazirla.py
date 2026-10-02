@@ -81,6 +81,27 @@ def paylasim_gorseli():
     return resim
 
 
+def tanitim_gorseli():
+    """Google Play mağaza sayfasının üstündeki 1024x500 görsel."""
+    genislik, yukseklik = 1024, 500
+    resim = Image.new("RGB", (genislik, yukseklik), ZEMIN)
+    cizim = ImageDraw.Draw(resim)
+    harfler = "HARFONİ"
+    renkler = [DOGRU, VAR, YOK, DOGRU, DOGRU, YOK, VAR]
+    kare, bosluk = 100, 12
+    toplam = len(harfler) * kare + (len(harfler) - 1) * bosluk
+    x0 = (genislik - toplam) / 2
+    y0 = 120
+    for i, (harf, renk) in enumerate(zip(harfler, renkler)):
+        x = x0 + i * (kare + bosluk)
+        kutu = (x, y0, x + kare, y0 + kare)
+        cizim.rounded_rectangle(kutu, radius=12, fill=renk)
+        ortali_yaz(cizim, kutu, harf, 62)
+    ortali_yaz(cizim, (0, 270, genislik, 330), "Türkçe günlük kelime oyunları", 44)
+    ortali_yaz(cizim, (0, 345, genislik, 385), "Klasik · Palavra · Arada · Artı Eksi", 30, SOLUK)
+    return resim
+
+
 def main():
     HEDEF.mkdir(exist_ok=True)
     simge(512).save(HEDEF / "simge-512.png")
@@ -89,6 +110,10 @@ def main():
     simge(180).save(HEDEF / "apple-touch-icon.png")
     simge(32).save(HEDEF / "favicon-32.png")
     paylasim_gorseli().save(HEDEF / "paylasim.png", optimize=True)
+    magaza = KOK / "magaza"
+    magaza.mkdir(exist_ok=True)
+    tanitim_gorseli().save(magaza / "play-tanitim-1024x500.png")
+    simge(512).save(magaza / "play-simge-512.png")
     print("Görseller gorseller/ klasörüne yazıldı.")
 
 
