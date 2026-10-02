@@ -20,8 +20,11 @@ export function sureYaz(ms) {
   return `${ikiHane(Math.floor(toplam / 3600))}:${ikiHane(Math.floor((toplam % 3600) / 60))}:${ikiHane(toplam % 60)}`;
 }
 
-// Cevap listesinden günün kelimesini seçer.
-export function gununKelimesi(liste, gun = bugununNumarasi()) {
-  const sira = ((gun - 1) % liste.length + liste.length) % liste.length;
+// Cevap listesinden günün kelimesini seçer. Her oyun listede farklı bir
+// yerden başlar ki aynı gün iki oyunda aynı kelime çıkmasın.
+export function gununKelimesi(liste, gun, oyun = "") {
+  let kaydirma = 0;
+  for (const harf of oyun) kaydirma = (kaydirma * 31 + harf.charCodeAt(0)) % liste.length;
+  const sira = (((gun - 1 + kaydirma) % liste.length) + liste.length) % liste.length;
   return liste[sira];
 }

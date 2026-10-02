@@ -15,7 +15,9 @@ Sonra tarayıcıda http://localhost:8123 adresini aç. (Dosyayı çift tıklayar
 
 - `index.html`: oyunların listelendiği ana sayfa
 - `klasik.html`, `js/oyunlar/klasik.js`: klasik mod
-- `js/ortak/`: oyunların ortak parçaları (klavye, günün kelimesi, istatistik, renk değerlendirme, Türkçe harf işlemleri)
+- `palavra.html`, `js/oyunlar/palavra.js`: her satırda bir yalan
+- `js/ortak/tahmin-oyunu.js`: harf tahminli oyunların ortak altyapısı (tahta, kayıt, istatistik, paylaşma)
+- `js/ortak/`: diğer ortak parçalar (klavye, günün kelimesi, renk değerlendirme, Türkçe harf işlemleri)
 - `css/ortak.css`: tüm tasarım
 - `veri/cevaplar.txt`: günün kelimesi olabilecek kelimeler (elle seçilir)
 - `veri/gecerli.txt`, `js/kelimeler.js`: üretilen dosyalar, elle değiştirilmez

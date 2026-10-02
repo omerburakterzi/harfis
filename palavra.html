@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#121417" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+  <meta name="description" content="Her satırda bir renk yalan söylüyor. 5 harfli Türkçe kelimeyi 8 tahminde bul.">
+  <title>Palavra · Harfiyen</title>
+  <link rel="stylesheet" href="css/ortak.css">
+</head>
+<body>
+  <div class="oyun-sayfasi">
+    <header class="ust">
+      <a class="ikon-dugme" href="./" aria-label="Oyunlara dön">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg>
+      </a>
+      <div class="baslik">
+        <h1>Palavra</h1>
+        <span id="gun-no" class="gun-no"></span>
+      </div>
+      <div class="ust-sag">
+        <button class="ikon-dugme" type="button" data-ac="yardim-penceresi" aria-label="Nasıl oynanır">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+        </button>
+        <button class="ikon-dugme" type="button" id="istatistik-ac" aria-label="İstatistikler">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="mod-secici" aria-label="Oyun modu">
+      <a id="mod-gunluk" href="palavra.html">Günlük</a>
+      <a id="mod-alistirma" href="palavra.html?mod=alistirma">Alıştırma</a>
+    </nav>
+
+    <main class="tahta-alani">
+      <div id="tahta" class="tahta" aria-label="Tahminler"></div>
+    </main>
+
+    <div id="klavye" class="klavye"></div>
+  </div>
+
+  <div id="bildirimler" class="bildirimler" aria-live="polite"></div>
+
+  <dialog id="yardim-penceresi" class="pencere">
+    <button class="kapat" type="button" data-kapat aria-label="Kapat">×</button>
+    <h2>Nasıl oynanır?</h2>
+    <p>Gizli 5 harfli kelimeyi <strong>8 tahminde</strong> bul. Renkler klasik moddaki gibi:
+      <span class="renk-etiketi" data-durum="dogru">doğru yerde</span>
+      <span class="renk-etiketi" data-durum="var">başka yerde</span>
+      <span class="renk-etiketi" data-durum="yok">kelimede yok</span></p>
+    <p><strong>Ama dikkat:</strong> her satırda tam olarak <strong>bir kare yalan söylüyor</strong>. O kare gerçek rengi yerine diğer iki renkten birini gösteriyor.</p>
+    <div class="ornek">
+      <div class="satir kucuk-satir">
+        <div class="kare" data-durum="yok">K</div><div class="kare" data-durum="yok">A</div><div class="kare" data-durum="dogru">L</div><div class="kare" data-durum="yok">E</div><div class="kare" data-durum="yok">M</div>
+      </div>
+      <p>Buradaki karelerden biri yalan. Belki <strong>L</strong> aslında doğru yerde değil, belki de gri görünen bir harf aslında kelimede var.</p>
+    </div>
+    <p>Yalan olduğunu düşündüğün kareye <strong>dokunarak işaretleyebilirsin</strong>. Klavye renklenmez, çünkü ipuçlarına güvenilmez.</p>
+    <p>Kelimeyi bulduğun satır yalan söylemez.</p>
+    <p class="not">Günlük modda herkes aynı kelimeyi ve aynı yalanları görür; yeni bulmaca her gece 00.00'da (Türkiye saati) gelir. Alıştırma modunda istediğin kadar oynayabilirsin.</p>
+  </dialog>
+
+  <dialog id="sonuc-penceresi" class="pencere">
+    <button class="kapat" type="button" data-kapat aria-label="Kapat">×</button>
+    <section id="oyun-sonu" hidden>
+      <h2 id="sonuc-baslik"></h2>
+      <p class="sonuc-kelime-satiri">Kelime: <a id="sonuc-kelime" target="_blank" rel="noopener" title="Anlamına bak"></a></p>
+    </section>
+    <h3 id="ist-baslik">İstatistikler</h3>
+    <div class="istatistikler">
+      <div><strong id="ist-oynanan">0</strong><span>Oynanan</span></div>
+      <div><strong id="ist-yuzde">0</strong><span>Kazanma %</span></div>
+      <div><strong id="ist-seri">0</strong><span>Seri</span></div>
+      <div><strong id="ist-en-uzun">0</strong><span>En uzun seri</span></div>
+    </div>
+    <h3>Tahmin dağılımı</h3>
+    <div id="dagilim" class="dagilim"></div>
+    <div class="pencere-alt">
+      <div id="geri-sayim-kutu" class="geri-sayim" hidden>
+        <span>Yeni kelime</span>
+        <strong id="geri-sayim">--:--:--</strong>
+      </div>
+      <button id="paylas" class="ana-dugme" type="button" hidden>Paylaş</button>
+      <button id="yeni-kelime" class="ana-dugme" type="button" hidden>Yeni kelime</button>
+    </div>
+  </dialog>
+
+  <script type="module" src="js/oyunlar/palavra.js"></script>
+</body>
+</html>
