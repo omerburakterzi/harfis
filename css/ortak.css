@@ -120,6 +120,7 @@ button { font: inherit; color: inherit; }
   place-items: center;
   min-height: 0;
   padding: 10px 16px;
+  container-type: size; /* tahta bu alanın genişliğine ve yüksekliğine göre boyutlanır */
 }
 
 .tahta {
@@ -127,7 +128,8 @@ button { font: inherit; color: inherit; }
   --satir-sayisi: 6;
   grid-template-rows: repeat(var(--satir-sayisi), 1fr);
   gap: 6px;
-  height: min(100%, calc(70px * var(--satir-sayisi)));
+  /* Ekrana hem genişlikte hem yükseklikte sığ; kareler 70 pikseli geçmesin. */
+  width: min(100cqw, calc(100cqh * 5 / var(--satir-sayisi)), 350px);
   aspect-ratio: 5 / var(--satir-sayisi);
 }
 
@@ -207,7 +209,7 @@ button { font: inherit; color: inherit; }
   display: flex;
   flex-direction: column;
   gap: 7px;
-  padding: 0 5px 10px;
+  padding: 0 8px max(10px, env(safe-area-inset-bottom));
   user-select: none;
 }
 
@@ -220,7 +222,7 @@ button { font: inherit; color: inherit; }
 .tus {
   flex: 1;
   max-width: 44px;
-  height: 56px;
+  height: 52px;
   padding: 0;
   border: 0;
   border-radius: 5px;
@@ -245,8 +247,8 @@ button { font: inherit; color: inherit; }
 .tus[data-durum="dogru-yok"] { background: linear-gradient(135deg, var(--dogru) 50%, var(--yok) 50%); }
 .renk-etiketi.iki-ihtimal { background: linear-gradient(135deg, var(--dogru) 50%, var(--var) 50%); }
 
-@media (max-height: 640px) {
-  .tus { height: 48px; }
+@media (max-height: 700px) {
+  .tus { height: 46px; }
 }
 
 /* ---- Bildirimler ---- */
@@ -533,9 +535,7 @@ a.oyun-karti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0
 .arada-bilgi { margin-top: 12px; }
 
 /* ---- Muamma ---- */
-/* Sayı sütunu tahtayı genişlettiği için hem genişliğe hem yüksekliğe sığdırılır
-   (cqw/cqh: tahta alanının genişliği/yüksekliği). */
-.tahta-alani:has(.tahta.sayili) { container-type: size; }
+/* Sayı sütunu tahtayı genişlettiği için oranı farklı. */
 .tahta.sayili {
   aspect-ratio: 6.4 / var(--satir-sayisi);
   height: auto;
