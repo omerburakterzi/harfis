@@ -112,6 +112,17 @@ def main():
     magaza.mkdir(exist_ok=True)
     tanitim_gorseli().save(magaza / "play-tanitim-1024x500.png")
     simge(512).save(magaza / "play-simge-512.png")
+    # iOS uygulaması: 1024x1024 simge (saydamlık olmadan) ve açılış ekranı
+    ios = KOK / "uygulama" / "ios" / "App" / "App" / "Assets.xcassets"
+    if ios.exists():
+        simge(1024).convert("RGB").save(ios / "AppIcon.appiconset" / "AppIcon-512@2x.png")
+        acilis = Image.new("RGB", (2732, 2732), ZEMIN)
+        kucuk = simge(300)
+        maske = Image.new("L", kucuk.size, 0)
+        ImageDraw.Draw(maske).rounded_rectangle((0, 0, 300, 300), radius=68, fill=255)
+        acilis.paste(kucuk, ((2732 - 300) // 2, (2732 - 300) // 2), maske)
+        for ad in ["splash-2732x2732.png", "splash-2732x2732-1.png", "splash-2732x2732-2.png"]:
+            acilis.save(ios / "Splash.imageset" / ad)
     print("Görseller gorseller/ klasörüne yazıldı.")
 
 

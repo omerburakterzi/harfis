@@ -1,0 +1,15 @@
+{
+  "name": "harfoni-uygulama",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Harfoni'nin iOS (ve ileride Android) uygulaması. Sitenin dosyaları www/ klasörüne kopyalanıp uygulamanın içine konur.",
+  "scripts": {
+    "hazirla": "node web-kopyala.mjs && cap sync"
+  },
+  "dependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/local-notifications": "^8.3.1"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "appId": "com.harfoni.app",
+  "appName": "Harfoni",
+  "webDir": "www",
+  "backgroundColor": "#121417",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#121417"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#17a398"
+    }
+  }
+}

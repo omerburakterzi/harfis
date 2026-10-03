@@ -44,6 +44,22 @@ araclar/.venv/bin/python araclar/kelimeleri-hazirla.py
 
 Site yayına girdikten sonra cevap listesini değiştirmek günlerin kelimelerini kaydırır.
 
+## Mobil uygulama
+
+`uygulama/` klasöründe Capacitor ile hazırlanmış iOS projesi var. Sitenin dosyaları
+uygulamanın içine kopyalanır, yani uygulama internetsiz ve harfoni.com'dan bağımsız çalışır.
+Uygulamaya özel özellikler (günlük hatırlatma bildirimi) `js/uygulama.js` içinde; tarayıcıda çalışmaz.
+
+Sitede değişiklik yaptıktan sonra uygulamayı güncellemek için:
+
+```bash
+cd uygulama
+npm install          # sadece ilk sefer
+npm run hazirla      # site dosyalarını kopyalar ve iOS projesini günceller
+```
+
+Sonra `uygulama/ios/App/App.xcodeproj` Xcode ile açılıp derlenir.
+
 ## Lisanslar
 
 - Yalın kelimeler [Zemberek-NLP](https://github.com/ahmetaa/zemberek-nlp)

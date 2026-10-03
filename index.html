@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/ortak.css">
   <link rel="manifest" href="manifest.webmanifest">
   <script defer src="js/olcum.js"></script>
+  <script defer src="js/uygulama.js"></script>
   <link rel="icon" href="gorseller/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="gorseller/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="Harfoni">
@@ -77,6 +78,20 @@
       </a>
     </div>
 
+    <div id="hatirlatma" class="hatirlatma" hidden>
+      <label class="hatirlatma-satir">
+        <span>
+          <strong>Günlük hatırlatma</strong>
+          <small>Yeni bulmacalar hazır olunca haber ver</small>
+        </span>
+        <input id="hatirlatma-ac" type="checkbox" role="switch">
+      </label>
+      <label class="hatirlatma-satir">
+        <span>Saat</span>
+        <select id="hatirlatma-saat"></select>
+      </label>
+    </div>
+
     <div id="kurulum" class="kurulum" hidden>
       <button id="kur-dugmesi" class="ana-dugme" type="button" hidden>Uygulamayı yükle</button>
       <p id="ios-ipucu" class="not" hidden>Uygulama gibi kullanmak için Safari'de <strong>Paylaş</strong> düğmesine, sonra <strong>Ana Ekrana Ekle</strong>'ye dokun.</p>
@@ -89,7 +104,8 @@
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 
     // Uygulama olarak kurulu değilse kurulum seçeneğini göster.
-    const kurulu = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+    // Mağaza uygulamasının içindeysek (Capacitor) hiç gösterme.
+    const kurulu = matchMedia("(display-mode: standalone)").matches || navigator.standalone || Boolean(window.Capacitor);
     const kurulum = document.getElementById("kurulum");
     const dugme = document.getElementById("kur-dugmesi");
     let kurulumIstegi;
