@@ -1,7 +1,8 @@
 """magaza/ham/ altındaki ekran görüntülerinden mağaza görselleri üretir.
 
 Her görselin üstüne kısa bir başlık yazar, görüntüyü yuvarlatılmış köşelerle
-ortalar. Çıktı: magaza/play-ekran-*.png (1080x1920, Google Play için 9:16).
+ortalar. Çıktı: magaza/play-ekran-*.png (1080x1920, Google Play) ve
+magaza/appstore-ekran-*.png (1320x2868, App Store 6,9 inç iPhone).
 
 Kullanım:
     araclar/.venv/bin/python araclar/magaza-gorselleri.py
@@ -30,14 +31,14 @@ SAHNELER = [
     ("6-anasayfa.jpg", "4 oyun, her gün", "Türkçe günlük kelime oyunları"),
 ]
 
-GENISLIK, YUKSEKLIK = 1080, 1920
-UST_ALAN = 360
+# (ön ek, genişlik, yükseklik): Google Play 9:16, App Store 6,9 inç iPhone
+BOYUTLAR = [("play-ekran", 1080, 1920), ("appstore-ekran", 1320, 2868)]
 
 
-def ortali(cizim, y, metin, boyut, renk):
+def ortali(cizim, genislik, y, metin, boyut, renk):
     font = ImageFont.truetype(YAZI_TIPI, boyut)
     sol, _, sag, _ = cizim.textbbox((0, 0), metin, font=font)
-    cizim.text(((GENISLIK - (sag - sol)) / 2 - sol, y), metin, font=font, fill=renk)
+    cizim.text(((genislik - (sag - sol)) / 2 - sol, y), metin, font=font, fill=renk)
 
 
 def yuvarlak_kose(resim, yaricap):
@@ -47,30 +48,38 @@ def yuvarlak_kose(resim, yaricap):
     return resim
 
 
-def sahne(dosya, baslik, alt_baslik):
+def sahne(dosya, baslik, alt_baslik, GENISLIK, YUKSEKLIK):
+    olcek = GENISLIK / 1080
+    ust_alan = round(360 * olcek)
     tuval = Image.new("RGB", (GENISLIK, YUKSEKLIK), ZEMIN)
     cizim = ImageDraw.Draw(tuval)
-    ortali(cizim, 110, baslik, 84, VURGU)
-    ortali(cizim, 225, alt_baslik, 52, BEYAZ)
+    ortali(cizim, GENISLIK, round(110 * olcek), baslik, round(84 * olcek), VURGU)
+    ortali(cizim, GENISLIK, round(225 * olcek), alt_baslik, round(52 * olcek), BEYAZ)
 
     goruntu = Image.open(HAM / dosya).convert("RGB")
-    yukseklik = YUKSEKLIK - UST_ALAN - 60
+    yukseklik = YUKSEKLIK - ust_alan - round(60 * olcek)
     genislik = round(goruntu.width * yukseklik / goruntu.height)
-    goruntu = yuvarlak_kose(goruntu.resize((genislik, yukseklik), Image.LANCZOS), 36)
+    if genislik > GENISLIK - round(80 * olcek):  # uzun ekranlarda genişliğe sığdır
+        genislik = GENISLIK - round(80 * olcek)
+        yukseklik = round(goruntu.height * genislik / goruntu.width)
+    goruntu = yuvarlak_kose(goruntu.resize((genislik, yukseklik), Image.LANCZOS), round(36 * olcek))
     x = (GENISLIK - genislik) // 2
     # İnce çerçeve
     cizim.rounded_rectangle(
-        (x - 3, UST_ALAN - 3, x + genislik + 3, UST_ALAN + yukseklik + 3),
-        radius=39, outline="#2e3137", width=3,
+        (x - 3, ust_alan - 3, x + genislik + 3, ust_alan + yukseklik + 3),
+        radius=round(39 * olcek), outline="#2e3137", width=3,
     )
-    tuval.paste(goruntu, (x, UST_ALAN), goruntu)
+    tuval.paste(goruntu, (x, ust_alan), goruntu)
     return tuval
 
 
 def main():
-    for i, (dosya, baslik, alt_baslik) in enumerate(SAHNELER, start=1):
-        sahne(dosya, baslik, alt_baslik).save(HEDEF / f"play-ekran-{i}.png", optimize=True)
-    print(f"{len(SAHNELER)} mağaza görseli magaza/ klasörüne yazıldı.")
+    for on_ek, genislik, yukseklik in BOYUTLAR:
+        for i, (dosya, baslik, alt_baslik) in enumerate(SAHNELER, start=1):
+            sahne(dosya, baslik, alt_baslik, genislik, yukseklik).convert("RGB").save(
+                HEDEF / f"{on_ek}-{i}.png", optimize=True
+            )
+    print(f"{len(SAHNELER) * len(BOYUTLAR)} mağaza görseli magaza/ klasörüne yazıldı.")
 
 
 if __name__ == "__main__":
