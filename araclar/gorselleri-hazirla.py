@@ -36,11 +36,12 @@ def ortali_yaz(cizim, kutu, metin, boyut, renk=BEYAZ):
     cizim.text((x, y), metin, font=font, fill=renk)
 
 
-def simge(boyut, guvenli_alan=1.0):
+def simge(boyut, guvenli_alan=1.0, zemin=DOGRU):
     """Turkuaz zemin, büyük beyaz H ve sağ altta küçük turuncu kare.
     guvenli_alan < 1 ise içerik ortaya doğru küçülür (Android'in yuvarlak/şekilli
     simge kesimlerinde kenarlar kırpılabildiği için)."""
-    resim = Image.new("RGB", (boyut, boyut), DOGRU)
+    # zemin=None: saydam zemin (Android uyarlanabilir simgesinin ön plan katmanı için)
+    resim = Image.new("RGBA", (boyut, boyut), (0, 0, 0, 0)) if zemin is None else Image.new("RGB", (boyut, boyut), zemin)
     cizim = ImageDraw.Draw(resim)
     orta = boyut / 2
     harf_kutusu = boyut * 0.96 * guvenli_alan
@@ -123,6 +124,36 @@ def main():
         acilis.paste(kucuk, ((2732 - 300) // 2, (2732 - 300) // 2), maske)
         for ad in ["splash-2732x2732.png", "splash-2732x2732-1.png", "splash-2732x2732-2.png"]:
             acilis.save(ios / "Splash.imageset" / ad)
+    # Android uygulaması: klasik ve yuvarlak simgeler, uyarlanabilir simge ön planı, açılış ekranı
+    android = KOK / "uygulama" / "android" / "app" / "src" / "main" / "res"
+    if android.exists():
+        yogunluklar = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4}
+        for ad, kat in yogunluklar.items():
+            klasor = android / f"mipmap-{ad}"
+            boyut = round(48 * kat)
+            simge(boyut).save(klasor / "ic_launcher.png")
+            yuvarlak = simge(boyut).convert("RGBA")
+            maske = Image.new("L", (boyut, boyut), 0)
+            ImageDraw.Draw(maske).ellipse((0, 0, boyut, boyut), fill=255)
+            yuvarlak.putalpha(maske)
+            yuvarlak.save(klasor / "ic_launcher_round.png")
+            # Uyarlanabilir simge: 108dp tuval, görünen kısım ortadaki 72dp
+            on_plan = round(108 * kat)
+            simge(on_plan, guvenli_alan=0.62, zemin=None).save(klasor / "ic_launcher_foreground.png")
+        (android / "values" / "ic_launcher_background.xml").write_text(
+            '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">#17A398</color>\n</resources>\n',
+            encoding="utf-8",
+        )
+        for klasor in android.glob("drawable*"):
+            for dosya in klasor.glob("splash.png"):
+                genislik, yukseklik = Image.open(dosya).size
+                ekran = Image.new("RGB", (genislik, yukseklik), ZEMIN)
+                kenar = min(genislik, yukseklik) // 4
+                kucuk = simge(kenar)
+                maske = Image.new("L", (kenar, kenar), 0)
+                ImageDraw.Draw(maske).rounded_rectangle((0, 0, kenar, kenar), radius=kenar * 0.225, fill=255)
+                ekran.paste(kucuk, ((genislik - kenar) // 2, (yukseklik - kenar) // 2), maske)
+                ekran.save(dosya)
     print("Görseller gorseller/ klasörüne yazıldı.")
 
 
